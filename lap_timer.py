@@ -201,7 +201,7 @@ def _get_msal_app():
     az = st.secrets["azure"]
     return msal.ConfidentialClientApplication(
         az["client_id"],
-        authority=f"https://login.microsoftonline.com/{az['tenant_id']}",
+        authority="https://login.microsoftonline.com/common",
         client_credential=az["client_secret"],
     )
 
