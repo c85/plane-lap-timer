@@ -205,17 +205,29 @@ def _get_msal_app():
         client_credential=az["client_secret"],
     )
 
+def _get_redirect_uri() -> str:
+    """Return the redirect URI based on the actual app URL, falling back to secrets."""
+    try:
+        url = st.context.url
+        if url:
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+            return f"{parsed.scheme}://{parsed.netloc}"
+    except Exception:
+        pass
+    return st.secrets["azure"]["redirect_uri"]
+
 def _get_auth_url() -> str:
     return _get_msal_app().get_authorization_request_url(
         scopes=["User.Read"],
-        redirect_uri=st.secrets["azure"]["redirect_uri"],
+        redirect_uri=_get_redirect_uri(),
     )
 
 def _fetch_first_name(code: str):
     result = _get_msal_app().acquire_token_by_authorization_code(
         code,
         scopes=["User.Read"],
-        redirect_uri=st.secrets["azure"]["redirect_uri"],
+        redirect_uri=_get_redirect_uri(),
     )
     if "access_token" not in result:
         return None
