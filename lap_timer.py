@@ -256,7 +256,7 @@ if "operator" not in st.session_state:
         auth_url = _get_auth_url()
         st.markdown(
             f"<div style='text-align:center'>"
-            f"<a href='{auth_url}' target='_self' style='"
+            f"<a href='{auth_url}' target='_top' style='"
             f"display:inline-block; padding:0.5em 1.5em; background:#1565c0; color:white; "
             f"border-radius:6px; text-decoration:none; font-family:Rajdhani; font-size:1rem; "
             f"font-weight:600; letter-spacing:0.05em;'>Sign in with Microsoft</a></div>",
