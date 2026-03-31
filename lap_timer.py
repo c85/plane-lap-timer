@@ -6,7 +6,7 @@ import msal
 import requests
 
 # ── Page Config ──────────────────────────────────────────────────────────────
-st.set_page_config(page_title="Orange Team Plane Lap Timer", page_icon="⏱️", layout="wide")
+st.set_page_config(page_title="Plane Lap Timer", page_icon="⏱️", layout="wide")
 
 # ── Snowflake ─────────────────────────────────────────────────────────────────
 @st.cache_resource
@@ -251,7 +251,7 @@ if "operator" not in st.session_state:
     else:
         st.markdown("<h2 style='text-align:center; font-family:Rajdhani; font-weight:700; "
                     "letter-spacing:0.18em; color:#e0e6f0; text-transform:uppercase; "
-                    "margin-bottom:0;'>⏱ Orange Team Plane Lap Timer</h2>", unsafe_allow_html=True)
+                    "margin-bottom:0;'>⏱ Plane Lap Timer</h2>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
         auth_url = _get_auth_url()
         col = st.columns([1, 2, 1])[1]
@@ -264,7 +264,7 @@ operator = st.session_state["operator"]
 # ── Header ────────────────────────────────────────────────────────────────────
 st.markdown("<h2 style='text-align:center; font-family:Rajdhani; font-weight:700; "
             "letter-spacing:0.18em; color:#e0e6f0; text-transform:uppercase; "
-            "margin-bottom:0;'>⏱ Orange Team Plane Lap Timer</h2>", unsafe_allow_html=True)
+            "margin-bottom:0;'>⏱ Plane Lap Timer</h2>", unsafe_allow_html=True)
 st.markdown(f"<p style='text-align:center; font-family:Rajdhani; font-size:1.25em; color:#a0aab8; margin-top:0.25em; margin-bottom:0;'>Welcome, {operator}</p>",
             unsafe_allow_html=True)
 
