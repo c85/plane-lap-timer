@@ -139,16 +139,7 @@ div[data-testid="stButton"]:nth-of-type(1) > button[kind="primary"] {
     border-color: #ff4b4b;
 }
 
-/* Clear button */
-div[data-testid="stButton"]:nth-of-type(2) > button {
-    background: transparent;
-    color: #5c6b80;
-    border-color: #2a2f3d;
-}
-div[data-testid="stButton"]:nth-of-type(2) > button:hover {
-    background: #1a1f2e;
-    color: #8892a4;
-}
+
 
 /* Selectbox label */
 .stSelectbox label {
@@ -290,7 +281,7 @@ else:
 st.markdown(badge, unsafe_allow_html=True)
 
 # ── Control buttons ───────────────────────────────────────────────────────────
-col1, col2 = st.columns([3, 1])
+col1 = st.container()
 
 with col1:
     if not st.session_state.running:
@@ -317,11 +308,6 @@ with col1:
             st.session_state.start_time = None
             st.rerun()
 
-with col2:
-    if st.button("🗑 Clear", width='stretch'):
-        for k, v in defaults.items():
-            st.session_state[k] = v if not isinstance(v, list) else []
-        st.rerun()
 
 # ── Lap history ───────────────────────────────────────────────────────────────
 if st.session_state.laps:
