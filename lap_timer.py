@@ -2,6 +2,8 @@ import streamlit as st
 import time
 from datetime import datetime
 import snowflake.connector
+import msal
+import requests
 
 # ── Page Config ──────────────────────────────────────────────────────────────
 st.set_page_config(page_title="Orange Team Plane Lap Timer", page_icon="⏱️", layout="wide")
@@ -202,27 +204,61 @@ def fmt(seconds: float) -> str:
     m  = int(seconds) // 60
     return f"{m:02d}:{s:02d}.{cs:02d}"
 
-# ── Operators ────────────────────────────────────────────────────────────────
-OPERATORS = [
-    "— Select operator —",
-    "Chris",
-    "Ishti",
-    "Giuseppe",
-    "Yasori",
-    "Laura",
-    "John",
-    "Felix",
-    "Susan"
-]
+# ── Azure SSO ─────────────────────────────────────────────────────────────────
+@st.cache_resource
+def _get_msal_app():
+    az = st.secrets["azure"]
+    return msal.ConfidentialClientApplication(
+        az["client_id"],
+        authority=f"https://login.microsoftonline.com/{az['tenant_id']}",
+        client_credential=az["client_secret"],
+    )
+
+def _get_auth_url() -> str:
+    return _get_msal_app().get_authorization_request_url(
+        scopes=["User.Read"],
+        redirect_uri=st.secrets["azure"]["redirect_uri"],
+    )
+
+def _fetch_first_name(code: str):
+    result = _get_msal_app().acquire_token_by_authorization_code(
+        code,
+        scopes=["User.Read"],
+        redirect_uri=st.secrets["azure"]["redirect_uri"],
+    )
+    if "access_token" not in result:
+        return None
+    data = requests.get(
+        "https://graph.microsoft.com/v1.0/me",
+        headers={"Authorization": f"Bearer {result['access_token']}"},
+    ).json()
+    return data.get("givenName") or data.get("displayName")
+
+if "operator" not in st.session_state:
+    params = st.query_params
+    if "code" in params:
+        first_name = _fetch_first_name(params["code"])
+        if first_name:
+            st.session_state["operator"] = first_name
+            st.query_params.clear()
+            st.rerun()
+        else:
+            st.error("Authentication failed. Please try again.")
+            st.stop()
+    else:
+        st.markdown("<h2 style='text-align:center; font-family:Rajdhani; font-weight:700; "
+                    "letter-spacing:0.18em; color:#e0e6f0; text-transform:uppercase; "
+                    "margin-bottom:0;'>⏱ Orange Team Plane Lap Timer</h2>", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.link_button("Sign in with Microsoft", _get_auth_url(), use_container_width=True)
+        st.stop()
+
+operator = st.session_state["operator"]
 
 # ── Header ────────────────────────────────────────────────────────────────────
 st.markdown("<h2 style='text-align:center; font-family:Rajdhani; font-weight:700; "
             "letter-spacing:0.18em; color:#e0e6f0; text-transform:uppercase; "
             "margin-bottom:0;'>⏱ Orange Team Plane Lap Timer</h2>", unsafe_allow_html=True)
-
-# ── Operator dropdown ─────────────────────────────────────────────────────────
-operator = st.selectbox("OPERATOR", OPERATORS, label_visibility="visible")
-valid_operator = operator != OPERATORS[0]
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
@@ -259,8 +295,7 @@ col1, col2 = st.columns([3, 1])
 with col1:
     if not st.session_state.running:
         btn_label = "▶  START" if st.session_state.lap_num == 0 else "▶  NEW LAP"
-        btn_disabled = not valid_operator
-        if st.button(btn_label, width='stretch', disabled=btn_disabled):
+        if st.button(btn_label, width='stretch'):
             st.session_state.running    = True
             st.session_state.start_time = time.time()
             st.session_state.lap_num   += 1
@@ -287,10 +322,6 @@ with col2:
         for k, v in defaults.items():
             st.session_state[k] = v if not isinstance(v, list) else []
         st.rerun()
-
-# Warn if no operator selected
-if not valid_operator:
-    st.caption("⚠️  Select an operator before starting.")
 
 # ── Lap history ───────────────────────────────────────────────────────────────
 if st.session_state.laps:
