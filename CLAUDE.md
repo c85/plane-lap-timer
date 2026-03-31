@@ -19,7 +19,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Snowflake credentials** go in `.streamlit/secrets.toml` (gitignored):
+**Snowflake and Azure credentials** go in `.streamlit/secrets.toml` (gitignored):
 
 ```toml
 [snowflake]
@@ -29,6 +29,12 @@ password  = "..."
 database  = "..."
 schema    = "..."
 warehouse = "..."
+
+[azure]
+tenant_id     = "..."
+client_id     = "..."
+client_secret = "..."
+redirect_uri  = "http://localhost:8501"
 ```
 
 ## Running the App

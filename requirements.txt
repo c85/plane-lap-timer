@@ -1,2 +1,4 @@
 streamlit
 snowflake-connector-python
+msal
+requests
