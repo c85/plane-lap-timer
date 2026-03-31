@@ -22,7 +22,7 @@ def get_snowflake_conn():
 def _init_snowflake_table():
     get_snowflake_conn().cursor().execute("""
         CREATE TABLE IF NOT EXISTS OT_PLANE_LAP_TIMES (
-            TIMER_ID  INTEGER,
+            PLANE_ID  INTEGER,
             OPERATOR  VARCHAR,
             TIME      VARCHAR,
             SECONDS   FLOAT,
@@ -32,9 +32,9 @@ def _init_snowflake_table():
 
 def _write_lap_to_snowflake(lap):
     get_snowflake_conn().cursor().execute(
-        "INSERT INTO OT_PLANE_LAP_TIMES (TIMER_ID, OPERATOR, TIME, SECONDS, LOGGED_AT) "
+        "INSERT INTO OT_PLANE_LAP_TIMES (PLANE_ID, OPERATOR, TIME, SECONDS, LOGGED_AT) "
         "VALUES (%s, %s, %s, %s, %s)",
-        (lap["TIMER_ID"], lap["OPERATOR"], lap["TIME"], lap["SECONDS"], lap["LOGGED_AT"]),
+        (lap["PLANE_ID"], lap["OPERATOR"], lap["TIME"], lap["SECONDS"], lap["LOGGED_AT"]),
     )
 
 if "sf_initialized" not in st.session_state:
@@ -270,7 +270,7 @@ with col1:
         if st.button("⏹  STOP", width='stretch', type="primary"):
             elapsed_final = time.time() - st.session_state.start_time
             lap_row = {
-                "TIMER_ID":  st.session_state.lap_num,
+                "PLANE_ID":  st.session_state.lap_num,
                 "OPERATOR":  st.session_state.current_operator,
                 "TIME":      fmt(elapsed_final),
                 "SECONDS":   round(elapsed_final, 3),
@@ -301,7 +301,7 @@ if st.session_state.laps:
         width='stretch',
         hide_index=True,
         column_config={
-            "TIMER_ID":        st.column_config.NumberColumn(width="small"),
+            "PLANE_ID":        st.column_config.NumberColumn(width="small"),
             "OPERATOR": st.column_config.TextColumn(width="medium"),
             "TIME":     st.column_config.TextColumn(width="medium"),
             "SECONDS":  st.column_config.NumberColumn(format="%.3f s", width="medium"),

@@ -60,7 +60,7 @@ The app opens at `http://localhost:8501`.
 
 ```sql
 CREATE TABLE OT_PLANE_LAP_TIMES (
-    TIMER_ID  INTEGER,   -- Lap number (session-scoped)
+    PLANE_ID  INTEGER,   -- Lap number (session-scoped)
     OPERATOR  VARCHAR,   -- Operator who recorded the lap
     TIME      VARCHAR,   -- Formatted time (MM:SS.cc)
     SECONDS   FLOAT,     -- Raw elapsed seconds
