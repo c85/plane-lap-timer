@@ -241,7 +241,15 @@ if "operator" not in st.session_state:
                     "letter-spacing:0.18em; color:#e0e6f0; text-transform:uppercase; "
                     "margin-bottom:0;'>⏱ Orange Team Plane Lap Timer</h2>", unsafe_allow_html=True)
         st.markdown("<br>", unsafe_allow_html=True)
-        st.link_button("Sign in with Microsoft", _get_auth_url(), use_container_width=True)
+        auth_url = _get_auth_url()
+        st.markdown(
+            f"<div style='text-align:center'>"
+            f"<a href='{auth_url}' target='_self' style='"
+            f"display:inline-block; padding:0.5em 1.5em; background:#1565c0; color:white; "
+            f"border-radius:6px; text-decoration:none; font-family:Rajdhani; font-size:1rem; "
+            f"font-weight:600; letter-spacing:0.05em;'>Sign in with Microsoft</a></div>",
+            unsafe_allow_html=True,
+        )
         st.stop()
 
 operator = st.session_state["operator"]
