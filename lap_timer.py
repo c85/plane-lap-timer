@@ -265,7 +265,7 @@ operator = st.session_state["operator"]
 st.markdown("<h2 style='text-align:center; font-family:Rajdhani; font-weight:700; "
             "letter-spacing:0.18em; color:#e0e6f0; text-transform:uppercase; "
             "margin-bottom:0;'>⏱ Orange Team Plane Lap Timer</h2>", unsafe_allow_html=True)
-st.markdown(f"<p style='text-align:center; font-family:Rajdhani; color:#a0aab8; margin-top:0.25em;'>Welcome, {operator}</p>",
+st.markdown(f"<p style='text-align:center; font-family:Rajdhani; font-weight:700; font-size:1.25em; color:#a0aab8; margin-top:0.25em;'>Welcome, {operator}</p>",
             unsafe_allow_html=True)
 
 st.markdown("<hr>", unsafe_allow_html=True)
