@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import snowflake.connector
 import msal
 import requests
@@ -317,7 +318,7 @@ with col1:
                 "OPERATOR":  st.session_state.current_operator,
                 "TIME":      fmt(elapsed_final),
                 "SECONDS":   round(elapsed_final, 3),
-                "LOGGED_AT": datetime.now().strftime("%I:%M:%S %p"),
+                "LOGGED_AT": datetime.now(ZoneInfo("America/New_York")).strftime("%I:%M:%S %p"),
             }
             st.session_state.laps.append(lap_row)
             _write_lap_to_snowflake(lap_row)
